@@ -1,0 +1,17 @@
+# Ignore uploaded and temporary folders
+uploads/
+invoices/
+extracted_text/
+output_reports/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore log files
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db

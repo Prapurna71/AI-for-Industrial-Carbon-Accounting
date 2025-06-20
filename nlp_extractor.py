@@ -8,32 +8,40 @@ def extract_energy_data(text):
         'natural_gas_m3': 0.0
     }
 
-    # Normalize text
-    text = text.replace(',', '').lower()
-    text = text.replace('ltr', 'litres').replace('lt', 'litres').replace(':', ' ')
+    # 🧹 Clean and normalize text
+    text = text.lower()
+    text = text.replace(',', '')
+    text = text.replace('ltr', 'litres').replace('lt', 'litres').replace('l ', 'litres ')
+    text = text.replace(':', ' ').replace('  ', ' ')
 
-    # Match electricity usage
-    kwh_matches = re.findall(r'(\d+\.?\d*)\s*kwh', text, re.IGNORECASE)
+    # ✅ Electricity
+    kwh_matches = re.findall(r'(\d+\.?\d*)\s*kwh', text)
     if kwh_matches:
         extracted['electricity_kwh'] = sum(float(k) for k in kwh_matches)
 
-    # Match diesel (litres)
-    diesel_matches = re.findall(r'(\d+\.?\d*)\s*litres.*?(diesel)?', text, re.IGNORECASE)
+    # ✅ Diesel (not found in this example, but still included)
+    diesel_matches = re.findall(r'(\d+\.?\d*)\s*litres.*?(diesel|high speed)?', text)
     if diesel_matches:
         extracted['diesel_litres'] = sum(float(m[0]) for m in diesel_matches)
 
-    # Match petrol
-    petrol_matches = re.findall(r'(\d+\.?\d*)\s*litres.*?(petrol)?', text, re.IGNORECASE)
+    # ✅ Petrol
+    petrol_matches = re.findall(r'(\d+\.?\d*)\s*litres.*?(petrol)?', text)
     if petrol_matches:
         extracted['petrol_litres'] = sum(float(m[0]) for m in petrol_matches)
 
-    # Match natural gas
-    gas_matches = re.findall(r'(\d+\.?\d*)\s*m3.*?(natural gas)?', text, re.IGNORECASE)
+    # ✅ Natural Gas
+    gas_matches = re.findall(r'(\d+\.?\d*)\s*m3.*?(natural gas)?', text)
     if gas_matches:
         extracted['natural_gas_m3'] = sum(float(m[0]) for m in gas_matches)
 
-    print("\n✅ Extracted Emission Data:")
-    for k, v in extracted.items():
-        print(f"{k}: {v}")
-
     return extracted
+
+
+# 🧪 Debug mode
+if __name__ == "__main__":
+    with open("extracted_text/Screenshot 2025-06-20 225423.png.txt", "r", encoding="utf-8") as f:
+        invoice_text = f.read()
+    result = extract_energy_data(invoice_text)
+    print("\n✅ Extracted Emission Data:")
+    for k, v in result.items():
+        print(f"{k}: {v}")

@@ -1,0 +1,18 @@
+ENERGEX LTD
+Invoice No: ENX-2025-1123
+
+Date: 05/06/2025
+
+Description Quantity Unit Price
+Electricity Usage 8500kWh 26.50
+Petrol Consumption 120litres 95.40
+
+Natural Gas 300 m3 % 20.00
+
+TOTAL: % 143,500
+
+Notes:
+Electricity for cooling and heating systems.
+Petrol for fleet vehicles.
+
+Natural gas for heating systems in production unit.
