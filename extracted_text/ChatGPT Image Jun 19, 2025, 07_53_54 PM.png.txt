@@ -1,0 +1,13 @@
+INDIAN OIL CORPORATION
+INV-2025-0032
+
+12/06/2025
+DESCRIPTION UNIT PRICE
+Diesel (High Speed) 150 It = 92,50
+Electricity Usage 4000 kWh = 6,20
+TOTAL = 38,675
+Notes:
+
+Diesel (High Speed: For generator backup.
+Electricity Usage: For lighting systems.
+

@@ -1,0 +1,5 @@
+source,unit,co2_factor
+electricity,kWh,0.233
+diesel,litres,2.68
+petrol,litres,2.31
+natural_gas,m3,2.00
