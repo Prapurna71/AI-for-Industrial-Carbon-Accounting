@@ -1,50 +1,51 @@
 import re
 
 def extract_energy_data(text):
-    extracted = {
-        'electricity_kwh': 0,
-        'diesel_litres': 0,
-        'petrol_litres': 0,
-        'natural_gas_m3': 0
-    }
+    data = {}
 
-    # Remove commas
-    text = text.replace(',', '')
+    # Normalize text
+    text = text.replace(',', '')         # Remove commas from numbers
+    text = text.replace(':', ' ')        # Replace colons (OCR sometimes adds them)
+    text = text.lower()                  # Case-insensitive match
+    text = text.replace('ltr', 'litres')
+    text = text.replace('lt', 'litres')  # Normalize 'lt' to 'litres'
 
-    # Electricity
-    kwh_matches = re.findall(r'(\d+\.?\d*)\s?kWh', text, re.IGNORECASE)
-    if kwh_matches:
-        extracted['electricity_kwh'] = sum(float(k) for k in kwh_matches)
+    # --- Extract Electricity ---
+    electricity_match = re.search(r'electricity.*?(\d+\.?\d*)\s*kwh', text)
+    if electricity_match:
+        data['electricity_kwh'] = float(electricity_match.group(1))
+    else:
+        data['electricity_kwh'] = 0.0
 
-    # Diesel — match lines with diesel + litre, regardless of order
-    diesel_matches = re.findall(r'(?:diesel[^\n]*?(\d+\.?\d*)\s?(litres|liter|l))|(?:(\d+\.?\d*)\s?(litres|liter|l)[^\n]*?diesel)', text, re.IGNORECASE)
-    for match in diesel_matches:
-        # match[0] OR match[2] contains the number depending on match side
-        val = match[0] or match[2]
-        if val:
-            extracted['diesel_litres'] += float(val)
+    # --- Extract Diesel ---
+    diesel_match = re.search(r'diesel.*?(\d+\.?\d*)\s*litres', text)
+    if diesel_match:
+        data['diesel_litres'] = float(diesel_match.group(1))
+    else:
+        data['diesel_litres'] = 0.0
 
-    # Petrol — same pattern for symmetry
-    petrol_matches = re.findall(r'(?:petrol[^\n]*?(\d+\.?\d*)\s?(litres|liter|l))|(?:(\d+\.?\d*)\s?(litres|liter|l)[^\n]*?petrol)', text, re.IGNORECASE)
-    for match in petrol_matches:
-        val = match[0] or match[2]
-        if val:
-            extracted['petrol_litres'] += float(val)
+    # --- Extract Petrol ---
+    petrol_match = re.search(r'petrol.*?(\d+\.?\d*)\s*litres', text)
+    if petrol_match:
+        data['petrol_litres'] = float(petrol_match.group(1))
+    else:
+        data['petrol_litres'] = 0.0
 
-    # Natural gas
-    gas_matches = re.findall(r'(\d+\.?\d*)\s?(m3|m³)[^\n]*natural gas', text, re.IGNORECASE)
-    if gas_matches:
-        extracted['natural_gas_m3'] = sum(float(m[0]) for m in gas_matches)
+    # --- Extract Natural Gas ---
+    gas_match = re.search(r'natural\s*gas.*?(\d+\.?\d*)\s*m3', text)
+    if gas_match:
+        data['natural_gas_m3'] = float(gas_match.group(1))
+    else:
+        data['natural_gas_m3'] = 0.0
 
-    return extracted
-
-
-
-if __name__ == "__main__":
-    with open("extracted_text/invoice1.jpg.txt", "r", encoding='utf-8') as f:
-        invoice_text = f.read()
-
-    result = extract_energy_data(invoice_text)
-    print("\n✅ Extracted Emission Data:")
-    for k, v in result.items():
+    print("✅ Extracted Emission Data:")
+    for k, v in data.items():
         print(f"{k}: {v}")
+
+    return data
+
+# Optional test
+if __name__ == "__main__":
+    with open("extracted_text/invoice1.jpg.txt", "r", encoding="utf-8") as f:
+        invoice_text = f.read()
+        extract_energy_data(invoice_text)

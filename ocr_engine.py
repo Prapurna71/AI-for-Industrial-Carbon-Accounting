@@ -2,13 +2,14 @@ import pytesseract
 from PIL import Image
 import os
 
-# Set Tesseract path if needed
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# ❌ REMOVE this on Streamlit Cloud (Linux auto-detects Tesseract)
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def extract_text_from_image(image_path):
     try:
         image = Image.open(image_path)
         text = pytesseract.image_to_string(image)
+        print("🔍 Extracted Text:\n", text)  # ✅ Debugging output
         return text
     except Exception as e:
         return f"Error reading {image_path}: {e}"
