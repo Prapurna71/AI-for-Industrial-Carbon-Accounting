@@ -1,15 +1,17 @@
-from PIL import Image
 import pytesseract
+from PIL import Image
 import os
+import platform
 
-# ✅ Set Tesseract path
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Set Tesseract path only for Windows
+if platform.system() == 'Windows':
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def extract_text_from_image(image_path):
     try:
         image = Image.open(image_path)
         text = pytesseract.image_to_string(image)
-        print("📄 Extracted OCR Text:\n", text)  # Optional: For debug
+        print("📄 Extracted OCR Text:\n", text)
         return text
     except Exception as e:
         return f"Error reading {image_path}: {e}"
@@ -26,6 +28,5 @@ def process_invoices(input_folder='invoices', output_folder='extracted_text'):
                 f.write(text)
             print(f"✅ Text saved to {output_file}")
 
-# 🧪 Debug/Test
 if __name__ == '__main__':
     process_invoices()
